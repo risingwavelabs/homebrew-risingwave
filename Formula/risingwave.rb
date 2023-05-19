@@ -17,11 +17,12 @@ class Risingwave < Formula
     system "#{Formula["rustup-init"].bin}/rustup-init",
            "-qy", "--no-modify-path",
            "--default-toolchain", "none"
+    ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
 
-    system HOMEBREW_CACHE/"cargo_cache/bin/cargo", "install",
+    system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
-           *std_cargo_args(prefix, "src/cmd_all")
+           *std_cargo_args(path: "src/cmd_all")
   end
 
   test do
