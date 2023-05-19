@@ -13,8 +13,8 @@ jobs:
     name: Check Formula
     steps:
       - uses: actions/checkout@v3
-      - name: Tap local repo
-        run: git clone . $(brew --repo)/Library/Taps/risingwavelabs/risingwave
+      - name: Tap locally
+        run: brew tap risingwavelabs/risingwave .
       - name: Audit
         run: brew audit risingwave --strict --online --git
       - name: Install
