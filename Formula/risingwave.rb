@@ -1,8 +1,9 @@
 class Risingwave < Formula
   desc "Distributed SQL database for stream processing"
   homepage "https://github.com/risingwavelabs/risingwave"
-  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v0.19.0-alpha.tar.gz"
-  sha256 "01cfc33813200cb3db1823963a6ab15ebf24b85e1ed0329c963885a4c726226d"
+  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/bz-homebrew-test-1.tar.gz"
+  version "0.19.0-bz-homebrew-test-1"
+  sha256 "a207b74f134f80927f00ac5091325e88c5e1e9803b962eff3e17f91ffbb97246"
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
