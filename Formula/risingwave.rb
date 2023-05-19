@@ -7,10 +7,10 @@ class Risingwave < Formula
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
   depends_on "cmake" => :build
+  depends_on "llvm" => :build
   depends_on "protobuf" => :build
   depends_on "rustup-init" => :build
   depends_on "xz"
-  uses_from_macos "llvm" => :build
 
   def install
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
