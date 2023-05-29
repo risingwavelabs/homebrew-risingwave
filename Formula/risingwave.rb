@@ -1,5 +1,5 @@
 class Risingwave < Formula
-  RW_VERSION = "0.19.0-alpha.1"
+  RW_VERSION = "0.19.0-alpha.1".freeze
   desc "Distributed SQL database for stream processing"
   homepage "https://github.com/risingwavelabs/risingwave"
   url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v#{RW_VERSION}.tar.gz"
