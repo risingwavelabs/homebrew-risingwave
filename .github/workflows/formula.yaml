@@ -1,0 +1,25 @@
+name: Check Formula
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: macos-latest
+    name: Check Formula
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update
+        run: brew update
+      - name: Tap locally
+        run: brew tap risingwavelabs/risingwave .
+      - name: Audit
+        run: brew audit risingwave --strict --online --git --verbose
+      - name: Install
+        run: brew install risingwave --verbose
+      - name: Test
+        run: risingwave frontend --help

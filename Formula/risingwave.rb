@@ -1,8 +1,9 @@
 class Risingwave < Formula
   desc "Distributed SQL database for stream processing"
   homepage "https://github.com/risingwavelabs/risingwave"
-  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v0.19.0-alpha.tar.gz"
-  sha256 "01cfc33813200cb3db1823963a6ab15ebf24b85e1ed0329c963885a4c726226d"
+  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v0.19.0-alpha.1.tar.gz"
+  # version "0.19.0-xx"
+  sha256 "de3b3c4db3c9f8fc632abd93b5ef156061da4beb9dcc52988e839b2b129dc7cb"
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
@@ -14,13 +15,15 @@ class Risingwave < Formula
 
   def install
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
-    system Formula["rustup-init"].bin/"rustup-init", "-qy", "--no-modify-path", "--default-toolchain", "none"
+    system "#{Formula["rustup-init"].bin}/rustup-init",
+           "-qy", "--no-modify-path",
+           "--default-toolchain", "none"
     ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
 
     system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
-           *std_cargo_args(prefix, "src/cmd_all")
+           *std_cargo_args(path: "src/cmd_all")
   end
 
   test do
