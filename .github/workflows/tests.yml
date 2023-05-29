@@ -11,6 +11,8 @@ jobs:
       matrix:
         os: [macos-12, self-hosted-macos-13-arm64]
     runs-on: ${{ matrix.os }}
+    env:
+      HOMEBREW_NO_INSTALL_FROM_API: 1 # https://github.com/Homebrew/brew/issues/15049
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -37,7 +39,7 @@ jobs:
       - run: brew test-bot --only-formulae
         if: github.event_name == 'pull_request'
         env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+          HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }} # required
 
       - name: Upload bottles as artifact
         if: always() && github.event_name == 'pull_request'
