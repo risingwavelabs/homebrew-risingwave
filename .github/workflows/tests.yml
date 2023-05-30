@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-12, self-hosted-macos-13-arm64]
+        os: [macos-12, self-hosted-macos-13-arm64, ubuntu-22.04]
     runs-on: ${{ matrix.os }}
     env:
       HOMEBREW_NO_INSTALL_FROM_API: 1 # https://github.com/Homebrew/brew/issues/15049
