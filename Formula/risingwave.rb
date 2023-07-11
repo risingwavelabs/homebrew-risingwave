@@ -17,6 +17,7 @@ class Risingwave < Formula
   depends_on "llvm" => :build
   depends_on "protobuf" => :build
   depends_on "rustup-init" => :build
+  depends_on "openssl@3"
   depends_on "xz"
 
   def install
@@ -26,6 +27,7 @@ class Risingwave < Formula
            "--default-toolchain", "none"
     ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
 
+    ENV.delete "RUSTFLAGS" # https://github.com/Homebrew/brew/pull/15544#issuecomment-1628639703
     system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
