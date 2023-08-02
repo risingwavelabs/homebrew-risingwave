@@ -25,7 +25,7 @@ class Risingwave < Formula
     system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
-           *std_cargo_args(path: "src/cmd_all") # "--locked", "--root ..", "--path src/cmd_all"
+           *std_cargo_args(path: "src/cmd_all") # "--locked", "--root ...", "--path src/cmd_all"
   end
 
   test do
