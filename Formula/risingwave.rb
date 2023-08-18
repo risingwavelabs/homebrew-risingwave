@@ -1,17 +1,11 @@
 class Risingwave < Formula
-  RW_VERSION = "1.0.0".freeze
+  RW_VERSION = "1.1.2".freeze
   desc "Distributed SQL database for stream processing"
   homepage "https://github.com/risingwavelabs/risingwave"
   url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v#{RW_VERSION}.tar.gz"
-  sha256 "7e1339565ee85268f9b3415da4089d4bd9e33f494f6178189079d399e4d18a77"
+  sha256 "9f137bded84d3fe7713c4bc37674c40f6a7f1c73ef68df55a6e71f1656af5231"
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
-
-  bottle do
-    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave-1.0.0"
-    sha256 cellar: :any, arm64_monterey: "d4234692b622ea1880347f9f738728f8d0486b4cb93dd51d6a2ac084fab2ee52"
-    sha256 cellar: :any, monterey:       "40bedf0e71c4cbb43dcd4142f03ba7a542743b4d7fbcc2245575864a40a3ea54"
-  end
 
   depends_on "cmake" => :build
   depends_on "llvm" => :build
