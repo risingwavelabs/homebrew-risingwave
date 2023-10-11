@@ -24,7 +24,7 @@ jobs:
           echo "CPLUS_INCLUDE_PATH: $CPLUS_INCLUDE_PATH"
 
           # https://apple.stackexchange.com/questions/458062/unable-to-find-include-file-on-newly-updated-macosc-c/459037
-          rm -rf /Library/Developer/CommandLineTools/MacOSX13.sdk
+          rm -rf /Library/Developer/CommandLineTools/SDKs/MacOSX13.sdk
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
