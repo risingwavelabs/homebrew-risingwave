@@ -17,7 +17,10 @@ jobs:
       HOMEBREW_NO_INSTALL_FROM_API: 1 # https://github.com/Homebrew/brew/issues/15049
     steps:
       - name: Print clang version
-        run: clang --version
+        run: |
+          clang --version
+
+          echo "CPLUS_INCLUDE_PATH: $CPLUS_INCLUDE_PATH"
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
