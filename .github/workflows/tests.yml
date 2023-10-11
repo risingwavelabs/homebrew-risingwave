@@ -9,7 +9,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-12, macos-13-xlarge, ubuntu-22.04]
+        # For macOS, large is Intel and XLarge is M1
+        # https://docs.github.com/en/actions/using-github-hosted-runners/about-larger-runners/about-larger-runners#about-macos-larger-runners
+        os: [macos-12-large, macos-13-xlarge, ubuntu-22.04]
     runs-on: ${{ matrix.os }}
     env:
       HOMEBREW_NO_INSTALL_FROM_API: 1 # https://github.com/Homebrew/brew/issues/15049
