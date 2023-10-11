@@ -19,7 +19,7 @@ jobs:
       - name: Fix mac build
         if: matrix.os == 'macos-13-xlarge' || matrix.os == 'macos-12-large'
         run: |
-          xcode-select --install
+          export CXXFLAGS="c++11"
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
