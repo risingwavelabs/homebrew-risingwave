@@ -16,10 +16,6 @@ jobs:
     env:
       HOMEBREW_NO_INSTALL_FROM_API: 1 # https://github.com/Homebrew/brew/issues/15049
     steps:
-      - name: Fix mac build
-        if: matrix.os == 'macos-13-xlarge' || matrix.os == 'macos-12-large'
-        run: |
-          export CXXFLAGS="c++11"
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master

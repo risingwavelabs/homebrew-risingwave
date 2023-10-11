@@ -14,6 +14,8 @@ class Risingwave < Formula
   depends_on "openssl@3"
   depends_on "xz"
 
+  env :std
+
   def install
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
     system "#{Formula["rustup-init"].bin}/rustup-init",
