@@ -25,6 +25,7 @@ class Risingwave < Formula
     ENV.cxx11
 
     ENV.delete "RUSTFLAGS" # https://github.com/Homebrew/brew/pull/15544#issuecomment-1628639703
+    ENV.append "RUSTFLAGS", ""
     system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
