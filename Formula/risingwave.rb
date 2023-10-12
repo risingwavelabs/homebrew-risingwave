@@ -20,6 +20,8 @@ class Risingwave < Formula
            "--default-toolchain", "none"
     ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
 
+    ENV.cxx11
+
     ENV.delete "RUSTFLAGS" # https://github.com/Homebrew/brew/pull/15544#issuecomment-1628639703
     ENV.append "RUSTFLAGS", ""
     system "cargo", "install",
