@@ -13,16 +13,12 @@ class Risingwave < Formula
   depends_on "openssl@3"
   depends_on "xz"
 
-  env :std
-
   def install
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
     system "#{Formula["rustup-init"].bin}/rustup-init",
            "-qy", "--no-modify-path",
            "--default-toolchain", "none"
     ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
-
-    ENV.cxx11
 
     ENV.delete "RUSTFLAGS" # https://github.com/Homebrew/brew/pull/15544#issuecomment-1628639703
     ENV.append "RUSTFLAGS", ""

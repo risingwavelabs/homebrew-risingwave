@@ -38,7 +38,7 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
-      - run: brew test-bot --only-formulae
+      - run: brew test-bot --only-formulae --fail-fast
         if: github.event_name == 'pull_request'
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }} # required
