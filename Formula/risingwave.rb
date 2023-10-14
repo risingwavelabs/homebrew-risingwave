@@ -8,6 +8,7 @@ class Risingwave < Formula
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
   depends_on "cmake" => :build
+  depends_on "llvm" => :build
   depends_on "protobuf" => :build
   depends_on "rustup-init" => :build
   depends_on "openssl@3"
@@ -19,8 +20,6 @@ class Risingwave < Formula
            "-qy", "--no-modify-path",
            "--default-toolchain", "none"
     ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
-
-    ENV.cxx11
 
     ENV.delete "RUSTFLAGS" # https://github.com/Homebrew/brew/pull/15544#issuecomment-1628639703
     # Homebrew changes cxx flags, and CMake doesn't pick them up, so rdkafka-sys build fails.
