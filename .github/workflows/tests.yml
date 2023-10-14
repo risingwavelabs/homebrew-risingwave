@@ -64,7 +64,7 @@ jobs:
         with:
           token: ${{ github.token }}
           issue: ${{ github.event.number }}
-          body: ":x: @${{github.actor}} bottle request [failed](${{github.event.repository.html_url}}/actions/runs/${{github.run_id}})."
-          bot_body: ":x: Bottle request [failed](${{github.event.repository.html_url}}/actions/runs/${{github.run_id}})."
+          body: "@${{github.actor}} bottle request for ${{ runner.os }} (${{github.event.repository.html_url}}/actions/runs/${{github.run_id}})."
+          bot_body: "Bottle request for ${{ runner.os }} (${{github.event.repository.html_url}}/actions/runs/${{github.run_id}})."
           bot: BrewTestBot
   

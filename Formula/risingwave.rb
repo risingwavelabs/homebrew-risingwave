@@ -23,7 +23,13 @@ class Risingwave < Formula
     ENV.cxx11
 
     ENV.delete "RUSTFLAGS" # https://github.com/Homebrew/brew/pull/15544#issuecomment-1628639703
-    ENV.append "RUSTFLAGS", ""
+    # Homebrew changes cxx flags, and CMake doesn't pick them up, so rdkafka-sys build fails.
+    # We cannot pass CMake flags (`std_cmake_args`) because it's in their build.rs.
+    #
+    # Some refs that might be useful:
+    # https://github.com/Homebrew/homebrew-core/pull/51949#issuecomment-601943075
+    # https://github.com/Homebrew/brew/pull/7134
+    ENV["SDKROOT"] = MacOS.sdk_path_if_needed
     system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
