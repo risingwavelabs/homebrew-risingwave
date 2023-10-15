@@ -7,6 +7,12 @@ class Risingwave < Formula
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
+  bottle do
+    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave-1.2.0"
+    sha256 cellar: :any, arm64_ventura: "3332956802bdbc0ba1dc3246e6cf4a347ce990eb6f755203884139546151b73a"
+    sha256 cellar: :any, ventura:       "eeea7521801328f50fdf8a00bc222eed11a06b0f7a2de118e9a052af957e21d4"
+  end
+
   depends_on "cmake" => :build
   depends_on "llvm" => :build
   depends_on "protobuf" => :build
