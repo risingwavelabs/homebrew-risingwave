@@ -58,13 +58,3 @@ jobs:
         with:
           name: bottles
           path: '*.bottle.*'
-
-      - name: Post comment 
-        uses: Homebrew/actions/post-comment@master
-        with:
-          token: ${{ github.token }}
-          issue: ${{ github.event.number }}
-          body: "@${{github.actor}} bottle request for ${{ runner.os }} (${{github.event.repository.html_url}}/actions/runs/${{github.run_id}})."
-          bot_body: "Bottle request for ${{ runner.os }} (${{github.event.repository.html_url}}/actions/runs/${{github.run_id}})."
-          bot: BrewTestBot
-  
