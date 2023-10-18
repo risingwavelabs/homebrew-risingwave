@@ -1,8 +1,7 @@
 class Risingwave < Formula
-  RW_VERSION = "1.2.0".freeze
   desc "Distributed SQL database for stream processing"
   homepage "https://github.com/risingwavelabs/risingwave"
-  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v#{RW_VERSION}.tar.gz"
+  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v1.2.0.tar.gz"
   sha256 "8dc4e3997941a31b3ff08ac0be760cbdcb840b8e40dcc99b40c2eafe346e034c"
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
