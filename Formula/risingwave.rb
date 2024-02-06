@@ -3,6 +3,7 @@ class Risingwave < Formula
   homepage "https://github.com/risingwavelabs/risingwave"
   url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v1.6.0.tar.gz"
   sha256 "ddd9fd3a3f8ef333dcc2474fb2732787408acbfddcdd3b81216a74056ee9db29"
+  revision 1
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
