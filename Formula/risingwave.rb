@@ -7,11 +7,6 @@ class Risingwave < Formula
   revision 1
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
-  bottle do
-    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave-1.6.0"
-    sha256 cellar: :any, arm64_ventura: "2541d374428a4a988666f85f5a21b4b3122ea619d914179c7c111b5b35b373e3"
-  end
-
   depends_on "cmake" => :build
   depends_on "llvm" => :build
   depends_on "protobuf" => :build
@@ -33,10 +28,15 @@ class Risingwave < Formula
     # Some refs that might be useful:
     # https://github.com/Homebrew/homebrew-core/pull/51949#issuecomment-601943075
     # https://github.com/Homebrew/brew/pull/7134
-    ENV["SDKROOT"] = MacOS.sdk_path_if_needed
+
+    if MacOS.version >= :mojave && MacOS::CLT.installed?
+      ENV["SDKROOT"] = ENV["HOMEBREW_SDKROOT"] = MacOS::CLT.sdk_path(MacOS.version)
+    end
+
     system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
+           "--profile", "dev",
            *std_cargo_args(path: "src/cmd_all") # "--locked", "--root ...", "--path src/cmd_all"
   end
 
