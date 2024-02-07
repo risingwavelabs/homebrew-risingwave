@@ -38,8 +38,8 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
+      # - name: Setup upterm session
+      #   uses: lhotari/action-upterm@v1
 
       - run: brew test-bot --only-formulae
         if: github.event_name == 'pull_request'
