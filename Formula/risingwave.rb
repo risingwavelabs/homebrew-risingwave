@@ -28,6 +28,11 @@ class Risingwave < Formula
     # https://github.com/Homebrew/homebrew-core/pull/51949#issuecomment-601943075
     # https://github.com/Homebrew/brew/pull/7134
 
+    # Remove `"-Clink-arg=xxx/ld64.lld"` to avoid relying on llvm's lld.
+    inreplace ".cargo/config.toml" do |s|
+      s.gsub!(/"-Clink-arg=.*ld64.lld",?/, "")
+    end
+
     if MacOS.version >= :mojave && MacOS::CLT.installed?
       ENV["SDKROOT"] = ENV["HOMEBREW_SDKROOT"] = MacOS::CLT.sdk_path(MacOS.version)
     end
