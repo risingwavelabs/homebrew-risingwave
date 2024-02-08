@@ -8,10 +8,10 @@ class RisingwaveAT17SingleNode < Formula
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
   bottle do
-    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave-1.6.1"
-    sha256 cellar: :any, arm64_ventura: "e6a85ee7b13bdf392be2c061b1ed635520c482583e440d6207ac51fae3206419"
-    sha256 cellar: :any, ventura:       "80e09d56079de6d8b67d3f90e4ffa349fec40c114970f16d9d3da5423a6e9482"
-    sha256 cellar: :any, monterey:      "e266368acc1eee8bc141e0638fb0a939af8779e24eaf1b346b95912e28d5e362"
+    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave@1.7-single-node-1.7.0-single-node"
+    sha256 cellar: :any, arm64_ventura: "23a2b72ed6b1f6ff3b416ecd6b4800cf9a6dbd1ed25de7af68e0fcfbfe8d1e7e"
+    sha256 cellar: :any, ventura:       "9f8b2819dbdb9f10fbd4174b0c681127c7a559138da47a81d1dac327b8e5bba6"
+    sha256 cellar: :any, monterey:      "999e4308dd43c94e90f538bc2af391af551f4344a58f28f16321fbc37ef3dc1e"
   end
 
   depends_on "cmake" => :build
