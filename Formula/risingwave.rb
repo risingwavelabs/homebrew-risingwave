@@ -12,7 +12,6 @@ class Risingwave < Formula
   end
 
   depends_on "cmake" => :build
-  depends_on "llvm" => :build
   depends_on "protobuf" => :build
   depends_on "rustup-init" => :build
   depends_on "openssl@3"
@@ -25,7 +24,12 @@ class Risingwave < Formula
            "--default-toolchain", "none"
     ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
 
-    ENV.delete "RUSTFLAGS" # https://github.com/Homebrew/brew/pull/15544#issuecomment-1628639703
+    # Remove `RUSTFLAGS` env var set by Homebrew, or it will override the one specified
+    # in `.cargo/config.toml`.
+    #
+    # https://github.com/Homebrew/brew/pull/15544#issuecomment-1628639703
+    ENV.delete "RUSTFLAGS"
+
     # Homebrew changes cxx flags, and CMake doesn't pick them up, so rdkafka-sys build fails.
     # We cannot pass CMake flags (`std_cmake_args`) because it's in their build.rs.
     #
@@ -33,6 +37,14 @@ class Risingwave < Formula
     # https://github.com/Homebrew/homebrew-core/pull/51949#issuecomment-601943075
     # https://github.com/Homebrew/brew/pull/7134
     ENV["SDKROOT"] = MacOS.sdk_path_if_needed
+
+    # Remove `"-Clink-arg=xxx/ld64.lld"` to avoid dependency on LLVM.
+    # If we `depends_on "llvm" => :build`, it will somehow corrupt the resolution of the C++
+    # compiler when building `cxx` crate. Didn't investigate further.
+    inreplace ".cargo/config.toml" do |s|
+      s.gsub!(/"-Clink-arg=.*ld64.lld",?/, "")
+    end
+
     system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
