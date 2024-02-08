@@ -4,6 +4,9 @@ on:
     branches:
       - main
   pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 jobs:
   test-bot:
     strategy:
@@ -38,7 +41,7 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
-      - run: brew test-bot --only-formulae
+      - run: brew test-bot --only-formulae --verbose
         if: github.event_name == 'pull_request'
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }} # required
