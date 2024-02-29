@@ -4,6 +4,7 @@ class Risingwave < Formula
   url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v1.7.0.tar.gz"
   sha256 "139d9b0947618ce711000b0a22bb05a0e3ce90f103e8f2f7e573dee485c2a6ad"
   license "Apache-2.0"
+  revision 1
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
   bottle do
@@ -16,8 +17,14 @@ class Risingwave < Formula
   depends_on "cmake" => :build
   depends_on "protobuf" => :build
   depends_on "rustup-init" => :build
+  depends_on "java11"
   depends_on "openssl@3"
   depends_on "xz"
+
+  resource "connector" do
+    url "https://github.com/risingwavelabs/risingwave/releases/download/v1.7.0/risingwave-v1.7.0-x86_64-unknown-linux-all-in-one.tar.gz"
+    sha256 "aca4affd6fadf33b927d4945d9bfffb73ed4af528aa99b758903600352ac1321"
+  end
 
   def install
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
@@ -50,7 +57,15 @@ class Risingwave < Formula
     system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
-           *std_cargo_args(path: "src/cmd_all") # "--locked", "--root ...", "--path src/cmd_all"
+           "--profile", "dev", # TODO: test only
+           *std_cargo_args(root: libexec, path: "src/cmd_all")
+
+    resource("connector").stage do
+      (libexec/"libexec").install Dir["libs/*"]
+    end
+
+    (bin/"risingwave").write_env_script (libexec/"bin"/"risingwave"),
+      CONNECTOR_LIBS_PATH: libexec/"libexec"
   end
 
   test do
