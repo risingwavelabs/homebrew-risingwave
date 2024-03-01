@@ -57,7 +57,6 @@ class Risingwave < Formula
     system "cargo", "install",
            "--bin", "risingwave",
            "--features", "rw-static-link",
-           "--profile", "dev", # TODO: test only
            *std_cargo_args(root: libexec, path: "src/cmd_all")
 
     resource("connector").stage do
