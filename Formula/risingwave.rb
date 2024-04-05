@@ -18,11 +18,10 @@ class Risingwave < Formula
   depends_on "rustup-init" => :build
   depends_on "java11"
   depends_on "openssl@3"
-  depends_on "xz"
 
   resource "connector" do
-    url "https://github.com/risingwavelabs/risingwave/releases/download/v1.7.0/risingwave-v1.7.0-x86_64-unknown-linux-all-in-one.tar.gz"
-    sha256 "aca4affd6fadf33b927d4945d9bfffb73ed4af528aa99b758903600352ac1321"
+    url "https://github.com/risingwavelabs/risingwave/releases/download/v1.8.0/risingwave-v1.8.0-x86_64-unknown-linux-all-in-one.tar.gz"
+    sha256 "341fd43fe75535732e67f11dee544cf309b30a30ad76370a6d5313dc6a5147e5"
   end
 
   def install
