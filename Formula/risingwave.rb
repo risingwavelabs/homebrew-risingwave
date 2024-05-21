@@ -13,14 +13,15 @@ class Risingwave < Formula
   end
 
   depends_on "cmake" => :build
+  depends_on "node@20" => :build
   depends_on "protobuf" => :build
   depends_on "rustup-init" => :build
   depends_on "java11"
   depends_on "openssl@3"
 
   resource "connector" do
-    url "https://github.com/risingwavelabs/risingwave/releases/download/v1.8.0/risingwave-v1.8.0-x86_64-unknown-linux-all-in-one.tar.gz"
-    sha256 "341fd43fe75535732e67f11dee544cf309b30a30ad76370a6d5313dc6a5147e5"
+    url "https://github.com/risingwavelabs/risingwave/releases/download/v1.9.0/risingwave-v1.9.0-x86_64-unknown-linux-all-in-one.tar.gz"
+    sha256 "ab736b8ec145cd32741e5ed548e8d3441ed22360d5555b0f94cd1b2e8036347e"
   end
 
   def install
@@ -50,6 +51,9 @@ class Risingwave < Formula
     inreplace ".cargo/config.toml" do |s|
       s.gsub!(/"-Clink-arg=.*ld64.lld",?/, "")
     end
+
+    # Enable building embedded dashboard.
+    ENV["ENABLE_BUILD_DASHBOARD"] = "1"
 
     system "cargo", "install",
            "--bin", "risingwave",
