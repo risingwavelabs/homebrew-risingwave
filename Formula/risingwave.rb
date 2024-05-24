@@ -1,7 +1,7 @@
 class Risingwave < Formula
   desc "Distributed SQL database for stream processing"
   homepage "https://github.com/risingwavelabs/risingwave"
-  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v1.8.1.tar.gz"
+  url "https://risingwave.gateway.scarf.sh/risingwave/archive/refs/tags/v1.8.1.tar.gz"
   sha256 "bb4c2a7c6bcc3f8509e1ae25a06cf12bfec87f52bbc2a1e3e840bdea77e76353"
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
@@ -19,7 +19,7 @@ class Risingwave < Formula
   depends_on "openssl@3"
 
   resource "connector" do
-    url "https://github.com/risingwavelabs/risingwave/releases/download/v1.8.0/risingwave-v1.8.0-x86_64-unknown-linux-all-in-one.tar.gz"
+    url "https://risingwave.gateway.scarf.sh/risingwave/releases/download/v1.8.0/risingwave-v1.8.0-x86_64-unknown-linux-all-in-one.tar.gz"
     sha256 "341fd43fe75535732e67f11dee544cf309b30a30ad76370a6d5313dc6a5147e5"
   end
 
