@@ -1,13 +1,13 @@
 class Risingwave < Formula
   desc "Distributed SQL database for stream processing"
   homepage "https://github.com/risingwavelabs/risingwave"
-  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v1.9.1.tar.gz"
+  url "https://docker.risingwave.com/risingwave/archive/refs/tags/v1.9.1.tar.gz"
   sha256 "a2ad286cde11891906082f54ca5edb997382df639acee83e096b921b0d29a642"
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
   bottle do
-    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave-1.9.1"
+    root_url "https://docker.risingwave.com/homebrew-risingwave/releases/download/risingwave-1.9.1"
     sha256 cellar: :any, arm64_ventura: "baa9110de5d75b63215f814c5b7cf1a5b3e43a73096b5f0448feaee03b402bc6"
     sha256 cellar: :any, ventura:       "96d5d26656e47e848344750adf93eed030c77eb1d1030b0a69a46965fc5ccdb3"
   end
@@ -20,7 +20,7 @@ class Risingwave < Formula
   depends_on "openssl@3"
 
   resource "connector" do
-    url "https://github.com/risingwavelabs/risingwave/releases/download/v1.9.1/risingwave-v1.9.1-x86_64-unknown-linux-all-in-one.tar.gz"
+    url "https://docker.risingwave.com/risingwave/releases/download/v1.9.1/risingwave-v1.9.1-x86_64-unknown-linux-all-in-one.tar.gz"
     sha256 "8f88a4754aebd94196e49f67300180ddf2236d88d93da96cd9e053b2f7487fc8"
   end
 
