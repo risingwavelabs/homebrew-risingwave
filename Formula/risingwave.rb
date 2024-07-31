@@ -1,8 +1,8 @@
 class Risingwave < Formula
   desc "Distributed SQL database for stream processing"
   homepage "https://github.com/risingwavelabs/risingwave"
-  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v1.9.1.tar.gz"
-  sha256 "a2ad286cde11891906082f54ca5edb997382df639acee83e096b921b0d29a642"
+  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v1.10.0.tar.gz"
+  sha256 "3ecb95e792bd16afa7404b74e3b624b798f4824cbad668fb38d536dabbb8f5e3"
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
@@ -15,18 +15,18 @@ class Risingwave < Formula
   depends_on "cmake" => :build
   depends_on "node@20" => :build
   depends_on "protobuf" => :build
-  depends_on "rustup-init" => :build
+  depends_on "rustup" => :build
   depends_on "java11"
   depends_on "openssl@3"
 
   resource "connector" do
-    url "https://github.com/risingwavelabs/risingwave/releases/download/v1.9.1/risingwave-v1.9.1-x86_64-unknown-linux-all-in-one.tar.gz"
-    sha256 "8f88a4754aebd94196e49f67300180ddf2236d88d93da96cd9e053b2f7487fc8"
+    url "https://github.com/risingwavelabs/risingwave/releases/download/v1.10.0/risingwave-v1.10.0-x86_64-unknown-linux-all-in-one.tar.gz"
+    sha256 "cf4927c62c2234567a2d87256fee217ae853300e12a2f7e9b28a0c873d823129"
   end
 
   def install
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
-    system "#{Formula["rustup-init"].bin}/rustup-init",
+    system "#{Formula["rustup"].bin}/rustup",
            "-qy", "--no-modify-path",
            "--default-toolchain", "none"
     ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
@@ -56,6 +56,7 @@ class Risingwave < Formula
     ENV["ENABLE_BUILD_DASHBOARD"] = "1"
 
     system "cargo", "install",
+           # "--profile", "production", # since the upcoming release 1.11 (or 2.0)
            "--bin", "risingwave",
            "--features", "rw-static-link",
            *std_cargo_args(root: libexec, path: "src/cmd_all")
