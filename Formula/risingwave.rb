@@ -26,7 +26,7 @@ class Risingwave < Formula
 
   def install
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
-    system "#{Formula["rustup"].bin}/rustup",
+    system "#{Formula["rustup"].bin}/rustup-init",
            "-qy", "--no-modify-path",
            "--default-toolchain", "none"
     ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
