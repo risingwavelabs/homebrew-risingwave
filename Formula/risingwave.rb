@@ -56,9 +56,10 @@ class Risingwave < Formula
     ENV["ENABLE_BUILD_DASHBOARD"] = "1"
 
     system "cargo", "install",
-           # "--profile", "production", # since the upcoming release 1.11 (or 2.0)
+           "--profile", "production",
            "--bin", "risingwave",
            "--features", "rw-static-link",
+           "--features", "all-udf",
            *std_cargo_args(root: libexec, path: "src/cmd_all")
 
     resource("connector").stage do
