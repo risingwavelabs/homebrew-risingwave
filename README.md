@@ -44,10 +44,13 @@ $ $(brew --prefix risingwave@1.2)/bin/risingwave --version
 
 ## Contributing
 
-Bump formula version:
+```bash
+# 1. Bump the version in the formula
+brew bump-formula-pr risingwave --version x.y.z
 
-```
-brew bump-formula-pr risingwave --url https://github.com/risingwavelabs/risingwave/archive/refs/tags/v<x.y.z>.tar.gz
-```
+# 2. Switch to the newly created branch
+git switch bump-risingwave-x.y.z
 
-At the same time, copy the old formula to `risingwave@<x.y>` and change its class name to `RisingwaveAT<xy>`, so that the old version can still be installed.
+# 3. Manually update the `resource "connector"` section in `Formula/risingwave.rb`
+code Formula/risingwave.rb
+```
