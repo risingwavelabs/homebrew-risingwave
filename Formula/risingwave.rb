@@ -55,6 +55,9 @@ class Risingwave < Formula
     # Enable building embedded dashboard.
     ENV["ENABLE_BUILD_DASHBOARD"] = "1"
 
+    # Will show "x.y.z (Homebrew)" in the version string.
+    ENV["GIT_SHA"] = "Homebrew"
+
     system "cargo", "install",
            "--profile", "production",
            "--bin", "risingwave",
