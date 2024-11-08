@@ -11,6 +11,8 @@ class Risingwave < Formula
     sha256 cellar: :any, arm64_ventura: "66bae737f803b8c212713a1a82d29b8ba4175742a9ad49cdffda995a999822c5"
   end
 
+  option "with-dev-profile", "Build with dev profile"
+
   depends_on "cmake" => :build
   depends_on "node@20" => :build
   depends_on "protobuf" => :build
@@ -56,9 +58,13 @@ class Risingwave < Formula
 
     # Will show "x.y.z (Homebrew)" in the version string.
     ENV["GIT_SHA"] = "Homebrew"
+    ENV["GIT_SHA"] += ", dev" if build.with?("dev-profile")
+
+    # Use `dev` profile if `--with-dev-profile` is passed.
+    profile = build.with?("dev-profile") ? "dev" : "production"
 
     system "cargo", "install",
-           "--profile", "production",
+           "--profile", profile,
            "--bin", "risingwave",
            "--features", "rw-static-link",
            "--features", "all-udf",
