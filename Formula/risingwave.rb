@@ -19,6 +19,7 @@ class Risingwave < Formula
   depends_on "rustup" => :build
   depends_on "java11"
   depends_on "openssl@3"
+  depends_on "python@3.12"
 
   resource "connector" do
     url "https://github.com/risingwavelabs/risingwave/releases/download/v2.0.2/risingwave-v2.0.2-x86_64-unknown-linux-all-in-one.tar.gz"
@@ -54,7 +55,9 @@ class Risingwave < Formula
     end
 
     # Enable building embedded dashboard.
-    ENV["ENABLE_BUILD_DASHBOARD"] = "1"
+
+    # Currently we don't support Python 3.13.
+    ENV["PYO3_PYTHON"] = "python3.12"
 
     # Will show "x.y.z (Homebrew)" in the version string.
     ENV["GIT_SHA"] = "Homebrew"
