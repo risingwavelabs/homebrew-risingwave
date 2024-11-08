@@ -21,8 +21,8 @@ class Risingwave < Formula
   depends_on "openssl@3"
 
   resource "connector" do
-    url "https://github.com/risingwavelabs/risingwave/releases/download/v2.0.0/risingwave-v2.0.0-x86_64-unknown-linux-all-in-one.tar.gz"
-    sha256 "741e6a79a59b30ae8c8bba0473a25d66427472883e8374f1fd592603c2944fd6"
+    url "https://github.com/risingwavelabs/risingwave/releases/download/v2.0.2/risingwave-v2.0.2-x86_64-unknown-linux-all-in-one.tar.gz"
+    sha256 "51c8d0ba295c2d0747d8e8cafc908a65a8db26b62ee9883c589d8dc356359459"
   end
 
   def install
