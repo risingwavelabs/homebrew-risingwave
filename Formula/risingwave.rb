@@ -55,6 +55,7 @@ class Risingwave < Formula
     end
 
     # Enable building embedded dashboard.
+    ENV["ENABLE_BUILD_DASHBOARD"] = "1" if build.without?("dev-profile")
 
     # Currently we don't support Python 3.13.
     ENV["PYO3_PYTHON"] = "python3.12"
