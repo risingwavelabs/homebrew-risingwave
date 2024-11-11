@@ -26,6 +26,9 @@ class Risingwave < Formula
     sha256 "51c8d0ba295c2d0747d8e8cafc908a65a8db26b62ee9883c589d8dc356359459"
   end
 
+  # Mitigate "argument list too long" error when linking.
+  patch :DATA
+
   def install
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
     system "#{Formula["rustup"].bin}/rustup-init",
@@ -86,3 +89,17 @@ class Risingwave < Formula
     system "#{bin}/risingwave", "--help"
   end
 end
+
+__END__
+diff --git a/Cargo.toml b/Cargo.toml
+index 9319e18..b51a281 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -312,6 +312,7 @@ lto = "off"
+ 
+ [profile.production]
+ inherits = "release"
++codegen-units = 1 # mitigate "argument list too long" error when linking
+ incremental = false
+ lto = "thin"
+ 
