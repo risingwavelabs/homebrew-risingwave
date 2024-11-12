@@ -99,7 +99,7 @@ index 9319e18..b51a281 100644
  
  [profile.production]
  inherits = "release"
-+codegen-units = 1 # mitigate "argument list too long" error when linking
++codegen-units = 8 # mitigate "argument list too long" error when linking
  incremental = false
  lto = "thin"
  
