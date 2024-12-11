@@ -23,8 +23,8 @@ class Risingwave < Formula
   depends_on "python@3.12"
 
   resource "connector" do
-    url "https://github.com/risingwavelabs/risingwave/releases/download/v2.0.2/risingwave-v2.0.2-x86_64-unknown-linux-all-in-one.tar.gz"
-    sha256 "51c8d0ba295c2d0747d8e8cafc908a65a8db26b62ee9883c589d8dc356359459"
+    url "https://github.com/risingwavelabs/risingwave/releases/download/v2.1.0/risingwave-v2.1.0-x86_64-unknown-linux-all-in-one.tar.gz"
+    sha256 "2eb0fb03288b1f48d246ebb3cfd2bf2c8950358f25e18a1e1b0adeffde55ab2a"
   end
 
   # Mitigate "argument list too long" error when linking.
@@ -55,7 +55,7 @@ class Risingwave < Formula
     # If we `depends_on "llvm" => :build`, it will somehow corrupt the resolution of the C++
     # compiler when building `cxx` crate. Didn't investigate further.
     inreplace ".cargo/config.toml" do |s|
-      s.gsub!(/"-Clink-arg=.*ld64.lld",?/, "")
+      s.gsub!(/"-Clink-arg=.*lld",?/, "")
     end
 
     # Enable building embedded dashboard.
