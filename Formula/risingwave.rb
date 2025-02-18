@@ -7,9 +7,9 @@ class Risingwave < Formula
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
   bottle do
-    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave-2.1.0"
-    sha256 cellar: :any, arm64_ventura: "008f05013b716569f88e7d43471cbb59a509da9cca43011d56e38a729e198828"
-    sha256 cellar: :any, ventura:       "2f52aa5162139886753765661ca0f340d12f413ffddc924360dab9b2e18a779b"
+    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave-2.2.0"
+    sha256 cellar: :any, arm64_ventura: "044f7efc2f53108ca6845fa80ff092cfa63abcc7fb1eb32d12d89e34ced702ca"
+    sha256 cellar: :any, ventura:       "bd0befef6e73e6325ca43452ede96db5e99d365805ef1604176207b957a13dc3"
   end
 
   option "with-dev-profile", "Build with dev profile"
