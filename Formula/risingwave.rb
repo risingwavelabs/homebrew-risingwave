@@ -1,8 +1,8 @@
 class Risingwave < Formula
   desc "Distributed SQL database for stream processing"
   homepage "https://github.com/risingwavelabs/risingwave"
-  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v2.2.0.tar.gz"
-  sha256 "6ec2a0d937740dbe21d6dbe90d0084a4b0a028dca0de5f7bf9052538d9cd4234"
+  url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v2.4.2.tar.gz"
+  sha256 "d689086870b672553cc2da027a656400ecd8ef79b4a34f715edcf226c3e8e8d1"
   license "Apache-2.0"
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
