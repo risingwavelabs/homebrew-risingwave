@@ -64,6 +64,9 @@ class Risingwave < Formula
     # Currently we don't support Python 3.13.
     ENV["PYO3_PYTHON"] = "python3.12"
 
+    # Workaround for CMake 4 installed by Homebrew.
+    ENV["CMAKE_POLICY_VERSION_MINIMUM"] = "3.5"
+
     # Will show "x.y.z (Homebrew)" in the version string.
     ENV["GIT_SHA"] = "Homebrew"
     ENV["GIT_SHA"] += ", dev" if build.with?("dev-profile")
