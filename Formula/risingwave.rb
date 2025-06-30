@@ -75,7 +75,7 @@ class Risingwave < Formula
            "--profile", profile,
            "--bin", "risingwave",
            "--features", "rw-static-link",
-           "--features", "all-udf",
+           "--features", "udf",
            *std_cargo_args(root: libexec, path: "src/cmd_all")
 
     resource("connector").stage do
