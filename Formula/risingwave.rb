@@ -4,6 +4,7 @@ class Risingwave < Formula
   url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v2.4.2.tar.gz"
   sha256 "d689086870b672553cc2da027a656400ecd8ef79b4a34f715edcf226c3e8e8d1"
   license "Apache-2.0"
+  revision 1
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
   bottle do
@@ -82,7 +83,8 @@ class Risingwave < Formula
            *std_cargo_args(root: libexec, path: "src/cmd_all")
 
     resource("connector").stage do
-      (libexec/"libexec").install Dir["libs/*"]
+      # XXX: why `libs/*` doesn't work?
+      (libexec/"libexec").install Dir["**/*.jar"]
     end
 
     (bin/"risingwave").write_env_script (libexec/"bin"/"risingwave"),
