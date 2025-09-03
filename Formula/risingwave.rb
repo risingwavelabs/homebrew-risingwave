@@ -4,6 +4,7 @@ class Risingwave < Formula
   url "https://github.com/risingwavelabs/risingwave/archive/refs/tags/v2.5.1.tar.gz"
   sha256 "e50ecbdbc70a3c1d17c5369f0d64c9091efb9c42430ce688ab4bfce69f54962c"
   license "Apache-2.0"
+  revision 1
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
   bottle do
