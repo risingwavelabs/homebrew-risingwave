@@ -23,8 +23,8 @@ class Risingwave < Formula
   depends_on "python@3.12"
 
   resource "connector" do
-    url "https://github.com/risingwavelabs/risingwave/releases/download/v2.4.2/risingwave-connector-v2.4.2.tar.gz"
-    sha256 "24592c66622ed5a489c59141d34cc902ee7e2647010306142c404706b6c1fe56"
+    url "https://github.com/risingwavelabs/risingwave/releases/download/v2.5.1/risingwave-connector-v2.5.1.tar.gz"
+    sha256 "af582af8bc790f2b66d7d8feef84cb056e0e46d8c16b71440a60d23d9e3edd63"
   end
 
   # Mitigate "argument list too long" error when linking.
