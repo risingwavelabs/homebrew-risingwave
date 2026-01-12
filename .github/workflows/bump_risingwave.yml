@@ -1,0 +1,172 @@
+name: bump risingwave
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Override RisingWave version (e.g. 2.5.1). Leave empty to use latest stable release."
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    env:
+      HOMEBREW_NO_INSTALL_FROM_API: 1 # https://github.com/Homebrew/brew/issues/15049
+      HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Set up git
+        uses: Homebrew/actions/git-user-config@master
+
+      - name: Resolve target version
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -n "${{ inputs.version }}" ]]; then
+            version="${{ inputs.version }}"
+            tag="v${version#v}"
+          else
+            tag="$(gh api repos/risingwavelabs/risingwave/releases/latest --jq .tag_name)"
+            version="${tag#v}"
+          fi
+
+          echo "tag=$tag" >>"$GITHUB_OUTPUT"
+          echo "version=$version" >>"$GITHUB_OUTPUT"
+          echo "Resolved version: $version ($tag)"
+
+      - name: Tap this repo (for brew dev-cmds)
+        run: brew tap risingwavelabs/risingwave
+
+      - name: Bump formula and connector resource
+        shell: bash
+        env:
+          RW_TAG: ${{ steps.resolve.outputs.tag }}
+          RW_VERSION: ${{ steps.resolve.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          tap_dir="$(brew --repo risingwavelabs/risingwave)"
+          formula_path="$tap_dir/Formula/risingwave.rb"
+
+          current_tag="$(ruby -ne 'if $_ =~ %r{^\\s*url\\s+\"https://github\\.com/risingwavelabs/risingwave/archive/refs/tags/(v[^\\\"]+)\\.tar\\.gz\"\\s*$}; puts $1; exit; end' "$formula_path" || true)"
+          if [[ -n "$current_tag" && "$current_tag" == "$RW_TAG" ]]; then
+            echo "Formula already at latest ($current_tag); nothing to do."
+            exit 0
+          fi
+
+          cd "$tap_dir"
+
+          branch="bump-risingwave-$RW_VERSION"
+
+          if git show-ref --verify --quiet "refs/heads/$branch"; then
+            git checkout "$branch"
+          else
+            git checkout -b "$branch"
+          fi
+
+          # Bump the main formula (as in README), but don't open a PR yet.
+          brew bump-formula-pr --write-only --commit --no-audit risingwavelabs/risingwave/risingwave --version "$RW_VERSION"
+
+          connector_url="https://github.com/risingwavelabs/risingwave/releases/download/$RW_TAG/risingwave-connector-$RW_TAG.tar.gz"
+          echo "Connector URL: $connector_url"
+
+          tmp="$(mktemp -d)"
+          trap 'rm -rf "$tmp"' EXIT
+          curl -fsSL "$connector_url" -o "$tmp/connector.tgz"
+          connector_sha="$(sha256sum "$tmp/connector.tgz" | awk '{print $1}')"
+          echo "Connector sha256: $connector_sha"
+
+          ruby -e '
+            path = ENV.fetch("FORMULA_PATH")
+            new_url = ENV.fetch("CONNECTOR_URL")
+            new_sha = ENV.fetch("CONNECTOR_SHA256")
+
+            lines = File.readlines(path, chomp: true)
+            in_block = false
+            saw_block = false
+            updated_url = false
+            updated_sha = false
+
+            out = lines.map do |line|
+              if line.match?(/^\s*resource\s+\"connector\"\s+do\s*$/)
+                in_block = true
+                saw_block = true
+                next line
+              end
+
+              if in_block && line.match?(/^\s*url\s+\".*\"\s*$/)
+                updated_url = true
+                next line.sub(/\".*\"/, "\"#{new_url}\"")
+              end
+
+              if in_block && line.match?(/^\s*sha256\s+\".*\"\s*$/)
+                updated_sha = true
+                next line.sub(/\".*\"/, "\"#{new_sha}\"")
+              end
+
+              if in_block && line.match?(/^\s*end\s*$/)
+                in_block = false
+                next line
+              end
+
+              line
+            end
+
+            raise "resource \\\"connector\\\" block not found" unless saw_block
+            raise "connector url not updated" unless updated_url
+            raise "connector sha256 not updated" unless updated_sha
+
+            File.write(path, out.join("\n") + "\n")
+          ' FORMULA_PATH="$formula_path" CONNECTOR_URL="$connector_url" CONNECTOR_SHA256="$connector_sha"
+
+          git add "$formula_path"
+          git commit -m "risingwave: update connector resource to $RW_VERSION" || true
+
+          # Ensure we can push with GITHUB_TOKEN.
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push -u origin "$branch"
+
+          # Create PR (or print existing).
+          existing_number="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$branch" --state all --json number --jq '.[0].number' || true)"
+          pr_number=""
+          pr_url=""
+          if [[ -n "$existing_number" && "$existing_number" != "null" ]]; then
+            existing_state="$(gh pr view --repo "$GITHUB_REPOSITORY" "$existing_number" --json state --jq .state)"
+            existing_url="$(gh pr view --repo "$GITHUB_REPOSITORY" "$existing_number" --json url --jq .url)"
+            if [[ "$existing_state" == "OPEN" ]]; then
+              pr_number="$existing_number"
+              pr_url="$existing_url"
+              echo "PR already exists: #$pr_number"
+            fi
+            if [[ "$existing_state" == "CLOSED" ]]; then
+              pr_number="$existing_number"
+              pr_url="$existing_url"
+              echo "Re-opening existing PR: #$pr_number"
+              gh pr reopen --repo "$GITHUB_REPOSITORY" "$pr_number"
+            fi
+            if [[ -z "$pr_number" ]]; then
+              echo "PR already exists (state=$existing_state): #$existing_number"
+              echo "$existing_url"
+              exit 0
+            fi
+          else
+            pr_url="$(gh pr create \
+              --repo "$GITHUB_REPOSITORY" \
+              --base main \
+              --head "$branch" \
+              --title "risingwave $RW_VERSION" \
+              --body "Bump risingwave to $RW_VERSION and update the connector resource.")"
+            pr_number="$(echo "$pr_url" | sed -E 's#.*/pull/([0-9]+).*#\\1#')"
+          fi
+
+          echo "$pr_url"

@@ -6,7 +6,7 @@ on:
 jobs:
   pr-pull:
     if: contains(github.event.pull_request.labels.*.name, 'pr-pull')
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       HOMEBREW_NO_INSTALL_FROM_API: 1 # https://github.com/Homebrew/brew/issues/15049
     steps:
