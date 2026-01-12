@@ -24,9 +24,6 @@ jobs:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Set up git
-        uses: Homebrew/actions/git-user-config@master
-
       - name: Resolve target version
         id: resolve
         shell: bash
@@ -65,13 +62,21 @@ jobs:
 
           cd "$tap_dir"
 
-          branch="bump-risingwave-$RW_VERSION"
+          base_branch="bump-risingwave-$RW_VERSION"
+          suffix="${GITHUB_RUN_ID:-$(date +%s)}"
+          branch="${base_branch}-${suffix}"
 
-          if git show-ref --verify --quiet "refs/heads/$branch"; then
-            git checkout "$branch"
-          else
-            git checkout -b "$branch"
+          existing_numbers="$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --json number,headRefName --jq ".[] | select(.headRefName | startswith(\"${base_branch}\")) | .number" || true)"
+          if [[ -n "$existing_numbers" ]]; then
+            echo "$existing_numbers" | while read -r n; do
+              [[ -z "$n" ]] && continue
+              echo "Closing existing PR: #$n"
+              gh pr close --repo "$GITHUB_REPOSITORY" "$n" --comment "Superseded by a new bump PR."
+            done
           fi
+
+          git fetch origin main
+          git checkout -B "$branch" origin/main
 
           # Bump the main formula (as in README), but don't open a PR yet.
           brew bump-formula-pr --write-only --commit --no-audit "$TAP/risingwave" --version "$RW_VERSION"
@@ -135,37 +140,17 @@ jobs:
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push -u origin "$branch"
 
-          # Create PR (or print existing).
-          existing_number="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$branch" --state all --json number --jq '.[0].number' || true)"
-          pr_number=""
-          pr_url=""
-          if [[ -n "$existing_number" && "$existing_number" != "null" ]]; then
-            existing_state="$(gh pr view --repo "$GITHUB_REPOSITORY" "$existing_number" --json state --jq .state)"
-            existing_url="$(gh pr view --repo "$GITHUB_REPOSITORY" "$existing_number" --json url --jq .url)"
-            if [[ "$existing_state" == "OPEN" ]]; then
-              pr_number="$existing_number"
-              pr_url="$existing_url"
-              echo "PR already exists: #$pr_number"
-            fi
-            if [[ "$existing_state" == "CLOSED" ]]; then
-              pr_number="$existing_number"
-              pr_url="$existing_url"
-              echo "Re-opening existing PR: #$pr_number"
-              gh pr reopen --repo "$GITHUB_REPOSITORY" "$pr_number"
-            fi
-            if [[ -z "$pr_number" ]]; then
-              echo "PR already exists (state=$existing_state): #$existing_number"
-              echo "$existing_url"
-              exit 0
-            fi
-          else
-            pr_url="$(gh pr create \
-              --repo "$GITHUB_REPOSITORY" \
-              --base main \
-              --head "$branch" \
-              --title "risingwave $RW_VERSION" \
-              --body "Bump risingwave to $RW_VERSION and update the connector resource.")"
-            pr_number="$(echo "$pr_url" | sed -E 's#.*/pull/([0-9]+).*#\\1#')"
+          existing_url="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$branch" --state all --json url --jq '.[0].url' || true)"
+          if [[ -n "$existing_url" && "$existing_url" != "null" ]]; then
+            echo "$existing_url"
+            exit 0
           fi
+
+          pr_url="$(gh pr create \
+            --repo "$GITHUB_REPOSITORY" \
+            --base main \
+            --head "$branch" \
+            --title "risingwave $RW_VERSION" \
+            --body "Bump risingwave to $RW_VERSION and update the connector resource.")"
 
           echo "$pr_url"
