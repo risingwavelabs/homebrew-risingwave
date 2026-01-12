@@ -66,15 +66,6 @@ jobs:
           suffix="${GITHUB_RUN_ID:-$(date +%s)}"
           branch="${base_branch}-${suffix}"
 
-          existing_numbers="$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --json number,headRefName --jq ".[] | select(.headRefName | startswith(\"${base_branch}\")) | .number" || true)"
-          if [[ -n "$existing_numbers" ]]; then
-            echo "$existing_numbers" | while read -r n; do
-              [[ -z "$n" ]] && continue
-              echo "Closing existing PR: #$n"
-              gh pr close --repo "$GITHUB_REPOSITORY" "$n" --comment "Superseded by a new bump PR."
-            done
-          fi
-
           git fetch origin main
           git checkout -B "$branch" origin/main
 
@@ -152,5 +143,16 @@ jobs:
             --head "$branch" \
             --title "risingwave $RW_VERSION" \
             --body "Bump risingwave to $RW_VERSION and update the connector resource.")"
+
+          pr_number="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$branch" --state open --json number --jq '.[0].number')"
+
+          old_pr_numbers="$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --json number,headRefName --jq ".[] | select(.headRefName != \"${branch}\" and (.headRefName | startswith(\"${base_branch}\"))) | .number" || true)"
+          if [[ -n "$old_pr_numbers" ]]; then
+            echo "$old_pr_numbers" | while read -r n; do
+              [[ -z "$n" ]] && continue
+              echo "Closing old PR: #$n"
+              gh pr close --repo "$GITHUB_REPOSITORY" "$n" --comment "Superseded by #$pr_number."
+            done
+          fi
 
           echo "$pr_url"
