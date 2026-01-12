@@ -19,6 +19,7 @@ jobs:
       HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
       GH_TOKEN: ${{ github.token }}
       GITHUB_TOKEN: ${{ github.token }}
+      TAP: ${{ github.repository_owner }}/risingwave
     steps:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
@@ -44,9 +45,6 @@ jobs:
           echo "version=$version" >>"$GITHUB_OUTPUT"
           echo "Resolved version: $version ($tag)"
 
-      - name: Tap this repo (for brew dev-cmds)
-        run: brew tap risingwavelabs/risingwave
-
       - name: Bump formula and connector resource
         shell: bash
         env:
@@ -55,7 +53,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          tap_dir="$(brew --repo risingwavelabs/risingwave)"
+          brew tap "$TAP"
+          tap_dir="$(brew --repo "$TAP")"
           formula_path="$tap_dir/Formula/risingwave.rb"
 
           current_tag="$(ruby -ne 'if $_ =~ %r{^\\s*url\\s+\"https://github\\.com/risingwavelabs/risingwave/archive/refs/tags/(v[^\\\"]+)\\.tar\\.gz\"\\s*$}; puts $1; exit; end' "$formula_path" || true)"
@@ -75,7 +74,7 @@ jobs:
           fi
 
           # Bump the main formula (as in README), but don't open a PR yet.
-          brew bump-formula-pr --write-only --commit --no-audit risingwavelabs/risingwave/risingwave --version "$RW_VERSION"
+          brew bump-formula-pr --write-only --commit --no-audit "$TAP/risingwave" --version "$RW_VERSION"
 
           connector_url="https://github.com/risingwavelabs/risingwave/releases/download/$RW_TAG/risingwave-connector-$RW_TAG.tar.gz"
           echo "Connector URL: $connector_url"
