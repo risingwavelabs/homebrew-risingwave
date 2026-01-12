@@ -85,7 +85,7 @@ jobs:
           connector_sha="$(sha256sum "$tmp/connector.tgz" | awk '{print $1}')"
           echo "Connector sha256: $connector_sha"
 
-          ruby -e '
+          FORMULA_PATH="$formula_path" CONNECTOR_URL="$connector_url" CONNECTOR_SHA256="$connector_sha" ruby -e '
             path = ENV.fetch("FORMULA_PATH")
             new_url = ENV.fetch("CONNECTOR_URL")
             new_sha = ENV.fetch("CONNECTOR_SHA256")
@@ -126,7 +126,7 @@ jobs:
             raise "connector sha256 not updated" unless updated_sha
 
             File.write(path, out.join("\n") + "\n")
-          ' FORMULA_PATH="$formula_path" CONNECTOR_URL="$connector_url" CONNECTOR_SHA256="$connector_sha"
+          '
 
           git add "$formula_path"
           git commit -m "risingwave: update connector resource to $RW_VERSION" || true
