@@ -47,6 +47,7 @@ $ $(brew --prefix risingwave@1.2)/bin/risingwave --version
 ### GitHub Actions
 
 We use the manual GitHub Actions workflow `bump risingwave` to bump the formula. This requires write access to this repository.
+The workflow expects a repository secret `HOMEBREW_BUMP_PR_TOKEN` (PAT or GitHub App token) with permissions to push branches and open PRs.
 
 1. Go to **Actions** → **bump risingwave** → **Run workflow**
 2. (Optional) Set `version` to `x.y.z`. If left empty, it uses the latest stable release (ignores prereleases).

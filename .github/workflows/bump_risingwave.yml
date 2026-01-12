@@ -16,9 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOMEBREW_NO_INSTALL_FROM_API: 1 # https://github.com/Homebrew/brew/issues/15049
-      HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
-      GH_TOKEN: ${{ github.token }}
-      GITHUB_TOKEN: ${{ github.token }}
+      HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_BUMP_PR_TOKEN }}
+      GH_TOKEN: ${{ secrets.HOMEBREW_BUMP_PR_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.HOMEBREW_BUMP_PR_TOKEN }}
       TAP: ${{ github.repository_owner }}/risingwave
     steps:
       - name: Set up Homebrew
