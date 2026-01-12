@@ -42,7 +42,21 @@ $ risingwave --version
 $ $(brew --prefix risingwave@1.2)/bin/risingwave --version
 ```
 
-## Contributing
+## Maintenance
+
+### GitHub Actions
+
+We use the manual GitHub Actions workflow `bump risingwave` to bump the formula. This requires write access to this repository.
+
+1. Go to **Actions** → **bump risingwave** → **Run workflow**
+2. (Optional) Set `version` to `x.y.z`. If left empty, it uses the latest stable release (ignores prereleases).
+3. The workflow will open a bump PR that updates:
+   - `Formula/risingwave.rb` version + sha256
+   - `resource "connector"` URL + sha256
+
+If there are existing open bump PRs for the same version, the workflow will close them after the new PR is created.
+
+### Bump manually
 
 ```bash
 # 1. Bump the version in the formula
