@@ -24,6 +24,9 @@ jobs:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
+      - name: Set up git
+        uses: Homebrew/actions/git-user-config@master
+
       - name: Resolve target version
         id: resolve
         shell: bash
