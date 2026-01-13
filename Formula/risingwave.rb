@@ -14,6 +14,7 @@ class Risingwave < Formula
   option "with-dev-profile", "Build with dev profile"
 
   depends_on "cmake" => :build
+  depends_on "llvm" => :build
   depends_on "node@20" => :build
   depends_on "protobuf" => :build
   depends_on "rustup" => :build
@@ -30,15 +31,6 @@ class Risingwave < Formula
   patch :DATA
 
   def install
-    # Some build scripts (e.g. faiss-sys via the `cmake` crate) read `CC/CXX` and pass them to
-    # CMake. Ensure we use Homebrew's compiler shims and don't accidentally reference a missing
-    # `/opt/homebrew/opt/llvm` toolchain in CI.
-    shims = HOMEBREW_LIBRARY/"Homebrew/shims/mac/super"
-    ENV["CC"] = (shims/"clang").to_s
-    ENV["CXX"] = (shims/"clang++").to_s
-    ENV["CMAKE_C_COMPILER"] = ENV["CC"]
-    ENV["CMAKE_CXX_COMPILER"] = ENV["CXX"]
-
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
     system "#{Formula["rustup"].bin}/rustup-init",
            "-qy", "--no-modify-path",
