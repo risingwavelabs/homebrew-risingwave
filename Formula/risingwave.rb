@@ -30,6 +30,15 @@ class Risingwave < Formula
   patch :DATA
 
   def install
+    # Some build scripts (e.g. faiss-sys via the `cmake` crate) read `CC/CXX` and pass them to
+    # CMake. Ensure we use Homebrew's compiler shims and don't accidentally reference a missing
+    # `/opt/homebrew/opt/llvm` toolchain in CI.
+    shims = HOMEBREW_LIBRARY/"Homebrew/shims/mac/super"
+    ENV["CC"] = (shims/"clang").to_s
+    ENV["CXX"] = (shims/"clang++").to_s
+    ENV["CMAKE_C_COMPILER"] = ENV["CC"]
+    ENV["CMAKE_CXX_COMPILER"] = ENV["CXX"]
+
     # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
     system "#{Formula["rustup"].bin}/rustup-init",
            "-qy", "--no-modify-path",
@@ -51,8 +60,6 @@ class Risingwave < Formula
     ENV["SDKROOT"] = MacOS.sdk_path_if_needed
 
     # Remove `"-Clink-arg=xxx/ld64.lld"` to avoid dependency on LLVM.
-    # If we `depends_on "llvm" => :build`, it will somehow corrupt the resolution of the C++
-    # compiler when building `cxx` crate. Didn't investigate further.
     inreplace ".cargo/config.toml" do |s|
       s.gsub!(/"-Clink-arg=.*lld",?/, "")
     end
