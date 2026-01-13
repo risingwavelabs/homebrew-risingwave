@@ -14,11 +14,11 @@ class Risingwave < Formula
   option "with-dev-profile", "Build with dev profile"
 
   depends_on "cmake" => :build
-  depends_on "llvm" => :build
   depends_on "node@20" => :build
   depends_on "protobuf" => :build
   depends_on "rustup" => :build
   depends_on "java11"
+  depends_on "llvm" # TODO: why it becomes a runtime dependency?
   depends_on "openssl@3"
   depends_on "python@3.12"
 
