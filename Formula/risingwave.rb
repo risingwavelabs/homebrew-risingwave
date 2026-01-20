@@ -7,8 +7,8 @@ class Risingwave < Formula
   head "https://github.com/risingwavelabs/risingwave.git", branch: "main"
 
   bottle do
-    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave-2.7.1"
-    sha256 cellar: :any, arm64_sonoma: "e0fda6726e68ab186d966a318dba996ebef378d470e12e1847cd62b8d9b8d528"
+    root_url "https://github.com/risingwavelabs/homebrew-risingwave/releases/download/risingwave-2.7.2"
+    sha256 cellar: :any, arm64_sonoma: "086bc57f16dfda38a53612120b47a017a20933b05f2bfb38f14f6118329425bf"
   end
 
   option "with-dev-profile", "Build with dev profile"
