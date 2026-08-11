@@ -14,6 +14,7 @@ class Risingwave < Formula
   option "with-dev-profile", "Build with dev profile"
 
   depends_on "cmake" => :build
+  depends_on "libomp" => :build
   depends_on "node@20" => :build
   depends_on "protobuf" => :build
   depends_on "rustup" => :build
@@ -31,17 +32,16 @@ class Risingwave < Formula
   patch :DATA
 
   def install
-    # this will install the necessary cargo/rustup toolchain bits in HOMEBREW_CACHE
-    system "#{Formula["rustup"].bin}/rustup-init",
-           "-qy", "--no-modify-path",
-           "--default-toolchain", "none"
-    ENV.prepend_path "PATH", HOMEBREW_CACHE/"cargo_cache/bin"
-
     # Remove `RUSTFLAGS` env var set by Homebrew, or it will override the one specified
     # in `.cargo/config.toml`.
     #
     # https://github.com/Homebrew/brew/pull/15544#issuecomment-1628639703
     ENV.delete "RUSTFLAGS"
+
+    # faiss-sys builds with a nested CMake invocation that does not inherit
+    # Homebrew's compiler flags, so expose the keg-only OpenMP paths directly.
+    ENV.append_path "CPLUS_INCLUDE_PATH", formula_opt_include("libomp")
+    ENV.append_path "LIBRARY_PATH", formula_opt_lib("libomp")
 
     # Homebrew changes cxx flags, and CMake doesn't pick them up, so rdkafka-sys build fails.
     # We cannot pass CMake flags (`std_cmake_args`) because it's in their build.rs.
